@@ -1,0 +1,33 @@
+<h2>Your Cart</h2>
+
+<table>
+    <tr>
+        <th>Title</th><th>Quantity</th><th>Price</th><th>Remove</th>
+    </tr>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.book.title}"></td>
+        <td th:text="${item.quantity}"></td>
+        <td th:text="${item.book.price * item.quantity}"></td>
+        <td>
+            <form th:action="@{/cart/remove}" method="post">
+                <input type="hidden" name="bookId" th:value="${item.book.id}" />
+                <button type="submit">Remove</button>
+            </form>
+        </td>
+    </tr>
+</table>
+<p>Total: €<span th:text="${total}">0.00</span></p>
+<p>Discounted Total: €<span th:text="${discountedTotal}">0.00</span></p>
+
+<form action="#" th:action="@{/cart/applyVoucher}" method="post">
+    <input type="text" name="voucherCode" placeholder="Enter Voucher Code" required />
+    <button type="submit">Apply</button>
+</form>
+
+<div th:if="${voucherApplied}" class="success">Voucher Applied! 20% off</div>
+<div th:if="${invalidVoucher}" class="error">Invalid voucher code</div>
+<form th:action="@{/cart/checkout}" method="post">
+    <button type="submit">Checkout</button>
+</form>
+
+

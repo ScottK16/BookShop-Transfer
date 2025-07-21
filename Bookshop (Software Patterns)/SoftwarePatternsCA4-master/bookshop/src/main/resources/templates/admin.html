@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+
+    <div th:if="${success}" class="success">Stock updated successfully.</div>
+    <div th:if="${error == 'unauthorized'}" class="error">Unauthorized: You must be an admin.</div>
+    <div th:if="${error == 'true'}" class="error">An error occurred while updating stock.</div>
+
+    <div class="form-section">
+        <form th:action="@{/admin/increaseStock}" method="post">
+            <label for="bookId">Select Book:</label>
+            <select name="bookId" required>
+                <option th:each="book : ${books}" 
+                        th:value="${book.id}" 
+                        th:text="${book.title}">Book Title</option>
+            </select>
+
+            <label for="quantity">Quantity to Add:</label>
+            <input type="number" name="quantity" min="1" required />
+
+            <button type="submit">Increase Stock</button>
+        </form>
+    </div>
+
+    <hr/>
+
+    <h2>Current Book Inventory</h2>
+    <ul>
+        <li th:each="book : ${books}">
+            <span th:text="${book.title}">Title</span> - 
+            <span th:text="${book.stock}">Stock</span>
+        </li>
+    </ul>
+	<h2>All Orders</h2>
+	<table>
+	    <tr>
+	        <th>User</th><th>Book</th><th>Quantity</th><th>Date</th>
+	    </tr>
+	    <tr th:each="order : ${orders}">
+	        <td th:text="${order.customer.username}"></td>
+	        <td th:text="${order.book.title}"></td>
+	        <td th:text="${order.quantity}"></td>
+			<td th:text="${order.orderDate}"></td>
+	    </tr>
+	</table>
+
+    <div>
+        <a th:href="@{/}">Back to Home</a>
+    </div>
+</body>
+</html>
